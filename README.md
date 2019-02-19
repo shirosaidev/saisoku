@@ -24,7 +24,7 @@ $ luigid --background
 ```
 It will default to port 8082, so you can point your browser to http://localhost:8082 to access the web ui.
 
-Send copy files task to luigi (see below for parameters)
+With the global Luigi scheduler running, we can send a copy files task to Luigi (see below for parameters)
 ```sh
 $ python saisoku.py CopyFiles --src /source/path --dst /dest/path --filelist=filelist.txt
 ```
