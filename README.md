@@ -1,5 +1,5 @@
 # saisoku
-Saisoku is a Python (2.7, 3.6 tested) module that helps you build complex pipelines of batch file copying jobs. It uses threaded file copying for fast file transfers and supports txt file lists. Uses [Luigi](https://github.com/spotify/luigi) for task management and web ui.
+Saisoku is a Python (2.7, 3.6 tested) module that helps you build complex pipelines of batch file copying jobs. It uses threaded file copying for fast file transfers and supports txt file lists. Uses Luigi for task management and web ui. To learn more about Luigi, visit [Luigi's github](https://github.com/spotify/luigi) or [Luigi's readthedocs](https://luigi.readthedocs.io/en/stable/index.html).
 
 ## Requirements
 - luigi
