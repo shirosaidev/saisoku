@@ -26,7 +26,7 @@ It will default to port 8082, so you can point your browser to http://localhost:
 
 With the global Luigi scheduler running, we can send a copy files task to Luigi (see below for parameters)
 ```sh
-$ python saisoku.py CopyFiles --src /source/path --dst /dest/path --filelist=filelist.txt
+$ python run_luigi.py CopyFiles --src /source/path --dst /dest/path --filelist=filelist.txt
 ```
 
 Log for saisoku is in os env temp folder saisoku.log.
