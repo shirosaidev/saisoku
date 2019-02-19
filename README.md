@@ -52,7 +52,7 @@ Optional parameters:
 
 `threads` number of worker copy threads (default 16)
 
-`symlinks` copy symlinks (default false)
+`symlinks` copy symlinks (default False)
 
 `copymeta` copy file stat info (default True)
 
