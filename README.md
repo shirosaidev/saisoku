@@ -14,10 +14,15 @@ $ pip install -r requirements.txt
 ```
 
 ## Usage
-Start luigi web ui (http://localhost:8082)
+Start Luigi scheduler daemon in foreground with
 ```sh
 $ luigid
 ```
+or in the background with
+```sh
+$ luigid --background
+```
+It will default to port 8082, so you can point your browser to http://localhost:8082 to access the web ui.
 
 Send copy files task to luigi (see below for parameters)
 ```sh
