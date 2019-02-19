@@ -23,15 +23,15 @@ class CopyFiles(luigi.Task):
     ignore = luigi.Parameter(default=None)
     copymeta = luigi.Parameter(default=True)
 
-    def requires(self):
-        return []
+    #def requires(self):
+    #    return []
 
-    def output(self):
-        return []
+    #def output(self):
+    #    return []
 
     def run(self):
-        ThreadedCopy(src=self.src, dst=self.dst, filelist=self.filelist, symlinks=self.symlinks,
-                    ignore=self.ignore, copymeta=self.copymeta)
+        ThreadedCopy(src=self.src, dst=self.dst, threads=self.threads, filelist=self.filelist, 
+                    symlinks=self.symlinks, ignore=self.ignore, copymeta=self.copymeta)
 
 
 if __name__ == '__main__':
