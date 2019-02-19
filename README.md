@@ -14,9 +14,9 @@ $ pip install -r requirements.txt
 ```
 
 ## Usage
-Create state file for Luigi
+Create directory for state file for Luigi
 ```sh
-$ mkdir /usr/local/var/luigi-server && touch /usr/local/var/luigi-server/state.pickle
+$ mkdir /usr/local/var/luigi-server
 ```
 Start Luigi scheduler daemon in foreground with
 ```sh
