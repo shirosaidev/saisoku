@@ -1,5 +1,5 @@
 # saisoku
-Saisoku is a Python (2.7, 3.6 tested) module that helps you build complex pipelines of batch file copying jobs. It uses threaded file copying for fast file transfers and supports txt file lists. Uses [Luigi](https://github.com/spotify/luigi) for task management and web ui.
+Saisoku is a Python (2.7, 3.6 tested) module that helps you build complex pipelines of batch file copying jobs. It uses threaded file copying for fast file transfers and supports txt file lists. Uses Luigi for task management and web ui. To learn more about Luigi, see it's [github](https://github.com/spotify/luigi) or [readthedocs](https://luigi.readthedocs.io/en/stable/index.html).
 
 ## Requirements
 - luigi
@@ -14,19 +14,23 @@ $ pip install -r requirements.txt
 ```
 
 ## Usage
+Create directory for state file for Luigi
+```sh
+$ mkdir /usr/local/var/luigi-server
+```
 Start Luigi scheduler daemon in foreground with
 ```sh
-$ luigid
+$ luigid --state-path=/usr/local/var/luigi-server/state.pickle
 ```
 or in the background with
 ```sh
-$ luigid --background
+$ luigid --background --state-path=/usr/local/var/luigi-server/state.pickle --logdir=/usr/local/var/log
 ```
 It will default to port 8082, so you can point your browser to http://localhost:8082 to access the web ui.
 
-With the global Luigi scheduler running, we can send a copy files task to Luigi (see below for parameters)
+With the Luigi centralized scheduler running, we can send a copy files task to Luigi (see below for parameters)
 ```sh
-$ python saisoku.py CopyFiles --src /source/path --dst /dest/path --filelist=filelist.txt
+$ python run_luigi.py CopyFiles --src /source/path --dst /dest/path --filelist=filelist.txt
 ```
 
 Log for saisoku is in os env temp folder saisoku.log.
@@ -48,7 +52,7 @@ Optional parameters:
 
 `threads` number of worker copy threads (default 16)
 
-`symlinks` copy symlinks (default false)
+`symlinks` copy symlinks (default False)
 
 `copymeta` copy file stat info (default True)
 
