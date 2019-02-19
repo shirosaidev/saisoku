@@ -18,9 +18,9 @@ class CopyFiles(luigi.Task):
     src = luigi.Parameter()
     dst = luigi.Parameter()
     threads = luigi.IntParameter(default=16)
-    filelist = luigi.Parameter(default='')
+    filelist = luigi.Parameter(default=None)
     symlinks = luigi.Parameter(default=False)
-    ignore = luigi.Parameter(default='')
+    ignore = luigi.Parameter(default=None)
     copymeta = luigi.Parameter(default=True)
 
     def requires(self):
