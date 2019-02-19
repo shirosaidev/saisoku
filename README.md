@@ -28,7 +28,7 @@ $ luigid --background --state-path=/usr/local/var/luigi-server/state.pickle --lo
 ```
 It will default to port 8082, so you can point your browser to http://localhost:8082 to access the web ui.
 
-With the global Luigi scheduler running, we can send a copy files task to Luigi (see below for parameters)
+With the Luigi centralized scheduler running, we can send a copy files task to Luigi (see below for parameters)
 ```sh
 $ python run_luigi.py CopyFiles --src /source/path --dst /dest/path --filelist=filelist.txt
 ```
