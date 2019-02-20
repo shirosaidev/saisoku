@@ -59,6 +59,10 @@ With the Luigi centralized scheduler running, we can send a copy files task to L
 ```sh
 $ python run_luigi.py CopyFiles --src /source/path --dst /dest/path
 ```
+To run a copy package task, which will create a tar.gz file containing all files at src and copy the tar.gz to dst
+```sh
+$ python run_luigi.py CopyFilesPackage --src /source/path --dst /dest/path
+```
 
 ### HTTP copy
 
