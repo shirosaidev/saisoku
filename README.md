@@ -84,7 +84,7 @@ Optional parameters:
 ```
 >>> from saisoku import ThreadedCopy
 
->>> ThreadedCopy(src='/source/dir', dst='/dest/dir', filelist='filelist.txt', ignore=('tmp*'))
+>>> ThreadedCopy(src='/source/dir', dst='/dest/dir', filelist='filelist.txt')
 calculating total file size..
 100%|██████████████████████████████████████████████████████████| 173/173 [00:00<00:00, 54146.30files/s]
 copying 173 files..
