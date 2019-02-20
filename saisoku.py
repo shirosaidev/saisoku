@@ -49,6 +49,7 @@ def logging_setup():
     ch.setLevel(loglevel)
     ch.setFormatter(logformatter)
     logger.addHandler(ch)
+    logger.propagate = False
     if logtofile:
         logfile = os.path.join(tempfile.gettempdir(), 'saisoku.log')
         hdlr = logging.FileHandler(logfile)
@@ -66,7 +67,7 @@ class ThreadedCopy:
     copyCount = 0
     lock = Lock()
 
-    def __init__(self, src, dst, threads=16, filelist=None, symlinks=False, ignore=None, copymeta=True):
+    def __init__(self, src, dst, threads=16, filelist=None, symlinks=False, ignore=None, copymeta=True, package=False):
         self.src = src
         self.dst = dst
         self.threads = threads
@@ -75,6 +76,7 @@ class ThreadedCopy:
         # copytree ignore patterns like '*.pyc', 'tmp*'
         self.ignore = None if ignore is None else shutil.ignore_patterns(ignore)
         self.copymeta = copymeta
+        self.is_package_task = package
         self.fileList = []
         self.sizecounter = 0
         self.errors = []
@@ -87,7 +89,10 @@ class ThreadedCopy:
             with open(self.filelist, "r") as file:  # txt with a file per line
                 for line in tqdm(file, total=self.get_num_lines(self.filelist), unit='files'):
                     fname = line.rstrip('\n')
-                    fpath = os.path.join(self.src, fname)
+                    if not self.is_package_task:  # copy files package task
+                        fpath = os.path.join(self.src, fname)
+                    else:
+                        fpath = fname
                     size = os.stat(fpath).st_size
                     self.fileList.append((fname, fpath, size))
                     self.sizecounter += size
@@ -127,7 +132,10 @@ class ThreadedCopy:
                 fname, fpath, size = fileName
                 isdir = True if os.path.isdir(fpath) else False
                 issym = True if os.path.islink(fpath) else False
-            srcname = os.path.join(self.src, fname)
+            if not self.is_package_task:
+                srcname = os.path.join(self.src, fname)
+            else:
+                srcname = fname
             dstname = os.path.join(self.dst, fname)
             try:
                 if isdir:
@@ -140,11 +148,11 @@ class ThreadedCopy:
                         if self.copymeta:
                             try:
                                 shutil.copy2(srcname, dstname)
-                            except OSError as e:
+                            except (OSError, IOError) as e:
                                 self.errors.extend((self.src, self.dst, str(e)))
                         else:
                             shutil.copyfile(srcname, dstname)
-            except OSError as e:
+            except (OSError, IOError) as e:
                 self.errors.append((srcname, dstname, str(e)))
             # catch the Error from the recursive copytree so that we can
             # continue with other files
