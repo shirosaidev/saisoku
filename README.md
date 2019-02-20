@@ -91,7 +91,7 @@ Saisoku's `ThreadedCopy` class requires two parameters:
 
 Optional parameters:
 
-`filelist` optional txt file containing one filename per line (not full path)
+`filelist` optional txt file containing one filename per line of files in src directory (not full path)
 
 `ignore` optional ignore files list, example `['*.pyc', 'tmp*']`
 
