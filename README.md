@@ -1,5 +1,5 @@
 # saisoku
-Saisoku is a Python (2.7, 3.6 tested) module that helps you build complex pipelines of batch file copying jobs. It uses threaded file copying for fast file transfers and supports txt file lists. Supports transfering files locally, over any network mount or over HTTP.
+Saisoku (fastest in Japanese) is a Python (2.7, 3.6 tested) module that helps you build complex pipelines of batch file copying jobs. It supports threaded transfering of files locally, over any network mount or over HTTP.
 
 Saisoku includes a Tornado http server for serving files over http.
 
