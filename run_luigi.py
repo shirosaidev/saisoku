@@ -11,11 +11,22 @@ LICENSE for the full license text.
 """
 
 import luigi
-from saisoku import ThreadedCopy, ThreadedHTTPCopy
 import logging
 
 
-logging.basicConfig(level=logging.DEBUG)
+def logging_setup():
+    """Set up logging."""
+    logger = logging.getLogger(name='run_luigi')
+    logger.setLevel(logging.DEBUG)
+    logformatter = logging.Formatter('%(asctime)s [%(levelname)s][%(name)s] %(message)s')
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    ch.setFormatter(logformatter)
+    logger.addHandler(ch)
+    logger.propagate = False
+    return logger
+
+logger = logging_setup()
 
 
 class CopyFiles(luigi.Task):
@@ -34,6 +45,8 @@ class CopyFiles(luigi.Task):
     #    return []
 
     def run(self):
+        from saisoku import ThreadedCopy
+        
         ThreadedCopy(src=self.src, dst=self.dst, threads=self.threads, filelist=self.filelist, 
                     symlinks=self.symlinks, ignore=self.ignore, copymeta=self.copymeta)
 
@@ -47,15 +60,18 @@ class CopyFilesHTTP(luigi.Task):
     chunksize = luigi.IntParameter(default=16384)
 
     def run(self):
+        from saisoku import ThreadedHTTPCopy
+
         ThreadedHTTPCopy(src=self.src, dst=self.dst, threads=self.threads, tservports=self.tservports, 
                     fetchmode=self.fetchmode, chunksize=self.chunksize)
 
 
 class PackageDirectory(luigi.Task):
     src = luigi.Parameter()
+    filelist = luigi.Parameter(default='saisoku_filelist.txt')
 
     def output(self):
-        return luigi.LocalTarget('saisoku_filelist.txt')
+        return luigi.LocalTarget(self.filelist)
 
     def run(self):
         import tarfile
@@ -66,11 +82,11 @@ class PackageDirectory(luigi.Task):
         src_path = os.path.abspath(self.src)
         # create tar.gz of all files in directory
         archive_name = '{}_saisoku_archive.tar.gz'.format(os.path.basename(src_path))
-        logging.info('Compressing files to %s...' % archive_name)
+        logger.info('Compressing files to %s...' % archive_name)
         tar = tarfile.open(archive_name, "w:gz")
         for item in scandir(self.src):
             if item.is_file():
-                logging.debug('  Adding %s...' % item.name)
+                logger.debug('  Adding %s...' % item.name)
                 tar.add(item.path, item.name)
         tar.close()
         archives.append(archive_name)
@@ -84,17 +100,31 @@ class CopyFilesPackage(luigi.Task):
     src = luigi.Parameter()
     dst = luigi.Parameter()
     threads = luigi.IntParameter(default=16)
-    filelist = 'saisoku_filelist.txt'
+    filelist = luigi.Parameter(default='saisoku_filelist.txt')
     symlinks = luigi.BoolParameter(default=False)
     ignore = luigi.OptionalParameter(default=None)
     copymeta = luigi.BoolParameter(default=True)
 
+    def output(self):
+        return luigi.LocalTarget(self.filelist)
+
     def requires(self):
-        return [PackageDirectory(src=self.src)]
+        return [PackageDirectory(src=self.src, filelist=self.filelist)]
 
     def run(self):
+        from saisoku import ThreadedCopy
+        import os
+
         ThreadedCopy(src=self.src, dst=self.dst, threads=self.threads, filelist=self.filelist, 
                 symlinks=self.symlinks, ignore=self.ignore, copymeta=self.copymeta, package=True)
+
+        logger.info('Cleaning up %s...' % self.src)
+        with self.input()[0].open() as f:
+            filename = f.read().rstrip('\n')
+            logger.debug('  Removing %s...' % filename)
+            os.remove(filename)  # delete tar.gz file in src
+        logger.debug('  Removing %s...' % self.filelist)
+        os.remove(self.filelist)  # delete file list
 
 
 if __name__ == '__main__':
