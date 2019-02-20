@@ -1,4 +1,4 @@
-# saisoku
+# saisoku - Fast File Transfer Orchestration Pipeline
 Saisoku is a Python (2.7, 3.6 tested) module that helps you build complex pipelines of batch file copying jobs. It supports threaded transfering of files locally, over any network mount or over HTTP.
 
 Saisoku includes a Tornado http server for serving files over http.
