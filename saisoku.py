@@ -28,7 +28,7 @@ import logging
 import tempfile
 
 
-SAISOKU_VERSION = '0.1-b.1'
+SAISOKU_VERSION = '0.1-b.2'
 __version__ = SAISOKU_VERSION
 
 
@@ -49,7 +49,6 @@ def logging_setup():
     ch.setLevel(loglevel)
     ch.setFormatter(logformatter)
     logger.addHandler(ch)
-    logger.propagate = False
     if logtofile:
         logfile = os.path.join(tempfile.gettempdir(), 'saisoku.log')
         hdlr = logging.FileHandler(logfile)
@@ -73,7 +72,8 @@ class ThreadedCopy:
         self.threads = threads
         self.filelist = filelist
         self.symlinks = symlinks
-        self.ignore = shutil.ignore_patterns(ignore)  # copytree ignore patterns like ('*.pyc', 'tmp*')
+        # copytree ignore patterns like '*.pyc', 'tmp*'
+        self.ignore = None if ignore is None else shutil.ignore_patterns(ignore)
         self.copymeta = copymeta
         self.fileList = []
         self.sizecounter = 0
@@ -179,3 +179,125 @@ class ThreadedCopy:
         while buf.readline():
             lines += 1
         return lines
+
+
+class ThreadedHTTPCopy:
+    """Threaded HTTP file copy class."""
+    totalFiles = 0
+    copyCount = 0
+    lock = Lock()
+
+    def __init__(self, src, dst, threads=4, tservports=[8000,8001,8002,8003], fetchmode='urlretrieve', chunksize=16384):
+        self.src = src
+        self.dst = dst
+        self.threads = threads
+        self.tservports = tservports
+        self.fileList = []
+        self.sizecounter = 0
+        self.fetchmode = fetchmode  # requests, urlretrieve
+        self.chunksize = chunksize
+        self.errors = []
+
+        logger.info('Starting file copy from %s to %s..' % (self.src, self.dst))
+
+        # get file list from http server
+        logger.info("Getting file list from http server..")
+        for item in tqdm(self.GetFileLinks(), unit='files'):  # get file links and build file list
+            self.fileList.append(item)
+            self.sizecounter += item[1]
+        # make dst directory if it doesn't exist
+        try:
+            os.makedirs(dst)
+        except OSError as e:
+            if e.errno == errno.EEXIST and os.path.isdir(dst):
+                pass
+            else:
+                raise
+    
+        self.totalFiles = len(self.fileList)
+        logger.info("Copying " + str(self.totalFiles) + " files (" + str(self.sizecounter) + " bytes)..")
+        self.pbar = tqdm(total=self.sizecounter, unit='B', unit_scale=True, unit_divisor=1024)
+        self.threadWorkerCopy(self.fileList)
+
+
+    def GetFileLinks(self):
+        """Generator that yields tuple of file links and their size at url."""
+        from bs4 import BeautifulSoup
+        import requests
+
+        url = self.tserv_lb()
+        r = requests.get(url)
+        html = r.content
+        soup = BeautifulSoup(html, 'html.parser')
+        for link in soup.find_all('a'):
+            yield (link.get('href'), int(link.get('title')))
+
+
+    def FetchFile(self, src, dst):
+        """Use urllib urlretrieve to fetch file."""
+        try:
+            from urllib import urlretrieve
+        except ImportError:
+            from urllib.request import urlretrieve
+        import requests
+
+        if self.fetchmode == 'urlretrieve':
+            try:
+                urlretrieve(src, dst)
+            except Exception as e:
+                self.errors.append((src, dst, str(e)))
+        elif self.fetchmode == 'requests' or self.fetchmode is None:
+            try:
+                response = requests.get(src, stream=True)
+                handle = open(dst, "wb")
+                for chunk in response.iter_content(chunk_size=self.chunksize):
+                    if chunk:
+                        handle.write(chunk)
+                handle.close()
+            except Exception as e:
+                self.errors.append((src, dst, str(e)))
+
+
+    def tserv_lb(self):
+        """Load balance across tserve ports."""
+        import random
+        port = random.choice(self.tservports)
+        url = self.src + ":" + str(port)
+        return url
+
+
+    def CopyWorker(self):
+        """Thread worker for file copying."""
+        try:
+            from urlparse import urljoin
+        except ImportError:
+            from urllib.parse import urljoin
+
+        while True:
+            fileItem = fileQueue.get()
+            fileName, size = fileItem
+            url = self.tserv_lb()
+            srcname = urljoin(url, fileName)
+            dstname = os.path.join(self.dst, fileName)
+            self.FetchFile(srcname, dstname)
+            if self.errors:
+                raise Error(self.errors)
+            fileQueue.task_done()
+            with self.lock:
+                self.copyCount += 1
+                #percent = (self.copyCount * 100) / self.totalFiles
+                #print(str(percent) + " percent copied.")
+                self.pbar.set_postfix(file=fileName[-10:], refresh=False)
+                self.pbar.update(size)
+
+
+    def threadWorkerCopy(self, fileItemList):
+        for i in range(self.threads):
+            t = Thread(target=self.CopyWorker)
+            t.daemon = True
+            t.start()
+        for fileItem in fileItemList:
+            fileQueue.put(fileItem)
+        fileQueue.join()
+        self.pbar.close()
+        logger.info('Done')

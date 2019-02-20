@@ -11,7 +11,7 @@ LICENSE for the full license text.
 """
 
 import luigi
-from saisoku import ThreadedCopy
+from saisoku import ThreadedCopy, ThreadedHTTPCopy
 
 
 class CopyFiles(luigi.Task):
@@ -26,12 +26,25 @@ class CopyFiles(luigi.Task):
     #def requires(self):
     #    return []
 
-    #def output(self):
-    #    return []
-
     def run(self):
         ThreadedCopy(src=self.src, dst=self.dst, threads=self.threads, filelist=self.filelist, 
                     symlinks=self.symlinks, ignore=self.ignore, copymeta=self.copymeta)
+
+    #def output(self):
+        #    return []
+
+
+class CopyFilesHTTP(luigi.Task):
+    src = luigi.Parameter()
+    dst = luigi.Parameter()
+    threads = luigi.IntParameter(default=16)
+    tservports = luigi.ListParameter(default=[8000,8001,8002,8003])
+    fetchmode = luigi.Parameter(default='urlretrieve')
+    chunksize = luigi.IntParameter(default=16384)
+
+    def run(self):
+        ThreadedHTTPCopy(src=self.src, dst=self.dst, threads=self.threads, tservports=self.tservports, 
+                    fetchmode=self.fetchmode, chunksize=self.chunksize)
 
 
 if __name__ == '__main__':
