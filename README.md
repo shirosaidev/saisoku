@@ -5,6 +5,11 @@ Saisoku includes a Tornado http server for serving files over http.
 
 Saisoku uses Luigi for task management and web ui. To learn more about Luigi, see it's [github](https://github.com/spotify/luigi) or [readthedocs](https://luigi.readthedocs.io/en/stable/index.html).
 
+[![License](https://img.shields.io/github/license/shirosaidev/saisoku.svg?label=License&maxAge=86400)](./LICENSE)
+[![Release](https://img.shields.io/github/release/shirosaidev/saisoku.svg?label=Release&maxAge=60)](https://github.com/shirosaidev/saisoku/releases/latest)
+[![Sponsor Patreon](https://img.shields.io/badge/Sponsor%20%24-Patreon-brightgreen.svg)](https://www.patreon.com/shirosaidev)
+[![Donate PayPal](https://img.shields.io/badge/Donate%20%24-PayPal-brightgreen.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLF223XAS4W72)
+
 
 ## Requirements
 - luigi
