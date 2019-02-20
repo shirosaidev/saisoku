@@ -72,7 +72,7 @@ Optional parameters:
 
 `filelist` optional txt file containing one filename per line (not full path)
 
-`ignore` optional ignore files tuple, example `('*.pyc', 'tmp*')`
+`ignore` optional ignore files list, example `['*.pyc', 'tmp*']`
 
 `threads` number of worker copy threads (default 16)
 
