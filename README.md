@@ -27,6 +27,8 @@ $ pip install -r requirements.txt
 ```
 
 ## Usage
+
+### Local/network mount copy
 Create directory for state file for Luigi
 ```sh
 $ mkdir /usr/local/var/luigi-server
