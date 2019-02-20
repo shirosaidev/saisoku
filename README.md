@@ -57,7 +57,7 @@ It will default to port 8082, so you can point your browser to http://localhost:
 
 With the Luigi centralized scheduler running, we can send a copy files task to Luigi (see below for [parameters](#using-saisoku-module-in-python))
 ```sh
-$ python run_luigi.py CopyFiles --src /source/path --dst /dest/path --filelist=filelist.txt
+$ python run_luigi.py CopyFiles --src /source/path --dst /dest/path
 ```
 
 ### HTTP copy
