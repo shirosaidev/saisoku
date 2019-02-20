@@ -38,10 +38,10 @@ class CopyFiles(luigi.Task):
     ignore = luigi.OptionalParameter(default=None)
     copymeta = luigi.BoolParameter(default=True)
 
-    #def requires(self):
+    #def output(self):
     #    return []
 
-    #def output(self):
+    #def requires(self):
     #    return []
 
     def run(self):
@@ -104,6 +104,7 @@ class CopyFilesPackage(luigi.Task):
     symlinks = luigi.BoolParameter(default=False)
     ignore = luigi.OptionalParameter(default=None)
     copymeta = luigi.BoolParameter(default=True)
+    cleanup = luigi.BoolParameter(default=True)
 
     def output(self):
         return luigi.LocalTarget(self.filelist)
@@ -118,13 +119,14 @@ class CopyFilesPackage(luigi.Task):
         ThreadedCopy(src=self.src, dst=self.dst, threads=self.threads, filelist=self.filelist, 
                 symlinks=self.symlinks, ignore=self.ignore, copymeta=self.copymeta, package=True)
 
-        logger.info('Cleaning up %s...' % self.src)
-        with self.input()[0].open() as f:
-            filename = f.read().rstrip('\n')
-            logger.debug('  Removing %s...' % filename)
-            os.remove(filename)  # delete tar.gz file in src
-        logger.debug('  Removing %s...' % self.filelist)
-        os.remove(self.filelist)  # delete file list
+        if self.cleanup:
+            logger.info('Cleaning up %s...' % self.src)
+            with self.input()[0].open() as f:
+                filename = f.read().rstrip('\n')
+                logger.debug('  Removing %s...' % filename)
+                os.remove(filename)  # delete tar.gz file in src
+            logger.debug('  Removing %s...' % self.filelist)
+            os.remove(self.filelist)  # delete file list
 
 
 if __name__ == '__main__':
