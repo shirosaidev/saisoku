@@ -28,7 +28,6 @@ $ pip install -r requirements.txt
 
 ## Usage
 
-### Local/network mount copy
 Create directory for state file for Luigi
 ```sh
 $ mkdir /usr/local/var/luigi-server
@@ -42,6 +41,8 @@ or in the background with
 $ luigid --background --state-path=/usr/local/var/luigi-server/state.pickle --logdir=/usr/local/var/log
 ```
 It will default to port 8082, so you can point your browser to http://localhost:8082 to access the web ui.
+
+### Local/network mount copy
 
 With the Luigi centralized scheduler running, we can send a copy files task to Luigi (see below for parameters)
 ```sh
