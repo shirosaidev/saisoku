@@ -32,7 +32,7 @@ $ pip install -r requirements.txt
 ## Download
 
 ```shell
-$ git clone https://github.com/saisoku/airbnbbot.git
+$ git clone https://github.com/saisoku/saisoku.git
 $ cd saisoku
 ```
 [Download latest version](https://github.com/shirosaidev/saisoku/releases/latest)
