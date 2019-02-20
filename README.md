@@ -43,14 +43,14 @@ $ python run_luigi.py CopyFiles --src /source/path --dst /dest/path --filelist=f
 
 ### HTTP copy
 
-Start up at least 4 http tornado servers (tserv)
+Start up at least 4 http tornado servers (tserv), the get requests from saisoku will be load balanced across these.
 ```sh
 $ python tserv.py /src/dir
 $ python tserv.py /src/dir --port 8001
-python tserv.py /src/dir --port 8002
-python tserv.py /src/dir --port 8003
+$ python tserv.py /src/dir --port 8002
+$ python tserv.py /src/dir --port 8003
 ```
-This will create an index.html file on http://localhost serving up the files in /src/dir.
+This will create an index.html file on http://localhost:8000 serving up the files in /src/dir.
 
 To send a HTTP copy files task to Luigi
 ```sh
