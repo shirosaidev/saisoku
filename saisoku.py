@@ -28,7 +28,7 @@ import logging
 import tempfile
 
 
-SAISOKU_VERSION = '0.1-b.2'
+SAISOKU_VERSION = '0.1-b.3'
 __version__ = SAISOKU_VERSION
 
 
@@ -230,7 +230,8 @@ class ThreadedHTTPCopy:
         html = r.content
         soup = BeautifulSoup(html, 'html.parser')
         for link in soup.find_all('a'):
-            yield (link.get('href'), int(link.get('title')))
+            if not link.get('href').endswith('/'):  # files only
+                yield (link.get('href'), int(link.get('title')))
 
 
     def FetchFile(self, src, dst):
