@@ -1,3 +1,12 @@
+```
+       ___              _                      _             
+      / __|   __ _     (_)     ___     ___    | |__   _  _   
+      \__ \  / _` |    | |    (_-<    / _ \   | / /  | +| |  
+      |___/  \__,_|   _|_|_   /__/_   \___/   |_\_\   \_,_|  
+    _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| 
+    "`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'
+```
+
 # saisoku - Fast file transfer orchestration pipeline
 Saisoku is a Python (2.7, 3.6 tested) module that helps you build complex pipelines of batch file copying jobs. It supports threaded transfering of files locally, over any network mount or over HTTP.
 
