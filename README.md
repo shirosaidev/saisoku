@@ -46,7 +46,7 @@ $ cd saisoku
 ```
 [Download latest version](https://github.com/shirosaidev/saisoku/releases/latest)
 
-## How to use
+## Usage - Luigi tasks
 
 Create directory for state file for Luigi
 ```sh
@@ -73,17 +73,6 @@ To run a copy package task, which will create a tar.gz file containing all files
 $ python run_luigi.py CopyFilesPackage --src /source/path --dst /dest/path
 ```
 
-### Server -> Client copy
-
-Start up Saisoku Transfer server listening on all interfaces on port 5005 (default)
-```sh
-$ python saisoku_server.py --host 0.0.0.0 -p 5005
-```
-Run client to download file from server
-```sh
-$ python saisoku_client.py --host 0.0.0.0 -p 5005 /path/to/file
-```
-
 ### HTTP copy
 
 Start up 2 Saisoku http servers, the get requests from saisoku clients will be load balanced across these.
@@ -98,7 +87,19 @@ To send a HTTP copy files task to Luigi
 $ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path --hosts '[5005,5006]'
 ```
 
-Log for saisoku is in os env temp folder saisoku.log.
+
+## Usage - Server -> Client transfer
+
+Start up Saisoku Transfer server listening on all interfaces on port 5005 (default)
+```sh
+$ python saisoku_server.py --host 0.0.0.0 -p 5005
+```
+Run client to download file from server
+```sh
+$ python saisoku_client.py --host 0.0.0.0 -p 5005 /path/to/file
+```
+
+**Log for saisoku is in os env temp folder saisoku.log.**
 
 
 ## Using saisoku module in Python
