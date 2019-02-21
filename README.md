@@ -10,7 +10,7 @@
 # saisoku - Fast file transfer orchestration pipeline
 Saisoku is a Python (2.7, 3.6 tested) module that helps you build complex pipelines of batch file copying jobs. It supports threaded transfering of files locally, over any network mount or over HTTP.
 
-Saisoku includes a Tornado http server for serving files over http.
+Saisoku includes a Transfer server and client which support copying over tcp socket or http.
 
 Saisoku uses Luigi for task management and web ui. To learn more about Luigi, see it's [github](https://github.com/spotify/luigi) or [readthedocs](https://luigi.readthedocs.io/en/stable/index.html).
 
@@ -73,20 +73,29 @@ To run a copy package task, which will create a tar.gz file containing all files
 $ python run_luigi.py CopyFilesPackage --src /source/path --dst /dest/path
 ```
 
+### Server -> Client copy
+
+Start up Saisoku Transfer server listening on all interfaces on port 5005 (default)
+```sh
+$ python saisoku_server.py --host 0.0.0.0 -p 5005
+```
+Run client to download file from server
+```sh
+$ python saisoku_client.py --host 0.0.0.0 -p 5005 /path/to/file
+```
+
 ### HTTP copy
 
-Start up at least 4 http tornado servers (tserv), the get requests from saisoku will be load balanced across these.
+Start up 2 Saisoku http servers, the get requests from saisoku clients will be load balanced across these.
 ```sh
-$ python tserv.py /src/dir
-$ python tserv.py /src/dir --port 8001
-$ python tserv.py /src/dir --port 8002
-$ python tserv.py /src/dir --port 8003
+$ python saisoku_server.py --httpserver -p 5005 -d /src/dir
+$ python saisoku_server.py --httpserver -p 5006 -d /src/dir
 ```
-This will create an index.html file on http://localhost:8000 serving up the files in /src/dir.
+This will create an index.html file on http://localhost:5005 serving up the files in /src/dir.
 
 To send a HTTP copy files task to Luigi
 ```sh
-$ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path
+$ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path --hosts '[5005,5006]'
 ```
 
 Log for saisoku is in os env temp folder saisoku.log.
