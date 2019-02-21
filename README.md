@@ -65,7 +65,7 @@ It will default to port 8082, so you can point your browser to http://localhost:
 
 ## Configure Boto 3
 
-If you are going to use the S3 copy Luigi tasks, first start be setting up Boto 3 (aws sdk python module) with the quick start instructions at https://github.com/boto/boto3
+If you are going to use the S3 copy Luigi tasks, first start be setting up Boto 3 (aws sdk python module) with the quick start instructions at [boto 3 github](https://github.com/boto/boto3).
 
 ## Usage - Luigi tasks
 
