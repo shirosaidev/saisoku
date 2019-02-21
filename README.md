@@ -8,7 +8,7 @@
 ```
 
 # saisoku - Fast file transfer orchestration pipeline
-Saisoku is a Python (2.7, 3.6 tested) package that helps you build complex pipelines of batch file copying jobs. It supports threaded transferring of files locally, over network mounts or HTTP.
+Saisoku is a Python (2.7, 3.6 tested) package that helps you build complex pipelines of batch file copying jobs. It supports threaded transferring of files locally, over network mounts, HTTP or to and from AWS S3 buckets.
 
 Saisoku also includes a Transfer Server and Client which support copying over TCP sockets.
 
@@ -31,6 +31,7 @@ If you are a fan of the project or using Saisoku in production, please consider 
 - tqdm
 - requests
 - beautifulsoup4
+- boto3
 
 Install above python modules using pip
 
@@ -46,7 +47,7 @@ $ cd saisoku
 ```
 [Download latest version](https://github.com/shirosaidev/saisoku/releases/latest)
 
-## Usage - Luigi tasks
+## Run Luigi
 
 Create directory for state file for Luigi
 ```sh
@@ -61,6 +62,12 @@ or in the background with
 $ luigid --background --state-path=/usr/local/var/luigi-server/state.pickle --logdir=/usr/local/var/log
 ```
 It will default to port 8082, so you can point your browser to http://localhost:8082 to access the web ui.
+
+## Configure Boto 3
+
+If you are going to use the S3 copy Luigi tasks, first start be setting up Boto 3 (aws sdk python module) with the quick start instructions at https://github.com/boto/boto3
+
+## Usage - Luigi tasks
 
 ### Local/network mount copy
 
@@ -89,6 +96,17 @@ To send a HTTP copy files task to Luigi
 $ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path --hosts '[5005,5006]'
 ```
 
+### S3 copy
+
+To copy a local file to s3 bucket
+```sh
+$ python run_luigi.py CopyLocalFileToS3 --src /source/path --dst s3://bucket/foo/bar
+```
+
+s3 bucket object to local file
+```sh
+$ python run_luigi.py CopyS3lFileToLocal --src s3://bucket/foo/bar --dst /dest/path
+```
 
 ## Usage - Server -> Client transfer
 
