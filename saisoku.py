@@ -160,13 +160,13 @@ class ThreadedCopy:
                 self.errors.extend(e.args[0])
             if self.errors:
                 raise Error(self.errors)
-            fileQueue.task_done()
             with self.lock:
                 self.copyCount += 1
                 #percent = (self.copyCount * 100) / self.totalFiles
                 #print(str(percent) + " percent copied.")
                 self.pbar.set_postfix(file=fname[-10:], refresh=False)
                 self.pbar.update(size)
+            fileQueue.task_done()
 
     def threadWorkerCopy(self, fileNameList):
         for i in range(self.threads):
@@ -195,7 +195,7 @@ class ThreadedHTTPCopy:
     copyCount = 0
     lock = Lock()
 
-    def __init__(self, src, dst, threads=4, tservports=[8000,8001,8002,8003], fetchmode='urlretrieve', chunksize=16384):
+    def __init__(self, src, dst, threads=16, tservports=[8000,8001,8002,8003], fetchmode='urlretrieve', chunksize=8192):
         self.src = src
         self.dst = dst
         self.threads = threads
@@ -285,19 +285,20 @@ class ThreadedHTTPCopy:
         while True:
             fileItem = fileQueue.get()
             fileName, size = fileItem
+            fileName = fileName.encode('utf-8')
             url = self.tserv_lb()
             srcname = urljoin(url, fileName)
             dstname = os.path.join(self.dst, fileName)
             self.FetchFile(srcname, dstname)
             if self.errors:
                 raise Error(self.errors)
-            fileQueue.task_done()
             with self.lock:
                 self.copyCount += 1
                 #percent = (self.copyCount * 100) / self.totalFiles
                 #print(str(percent) + " percent copied.")
                 self.pbar.set_postfix(file=fileName[-10:], refresh=False)
                 self.pbar.update(size)
+            fileQueue.task_done()
 
 
     def threadWorkerCopy(self, fileItemList):

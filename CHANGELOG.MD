@@ -5,6 +5,8 @@
 - copy package task (CopyFilesPackage class) for creating tar.gz of files in src directory and copying it to dst
 ### changed
 - improved tserv.py
+### fixed
+- encoding issue with non-ascii characters and http file copy
 
 ## [0.1-b.2] = 2019-02-20
 ### added

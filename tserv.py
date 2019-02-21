@@ -87,7 +87,7 @@ class StaticFileHandler(tornado.web.StaticFileHandler):
     
     def write(self, chunk):
         super(StaticFileHandler, self).write(chunk)
-        logging.debug('write called')
+        #logging.debug('write called')
         self.flush()
 
 
