@@ -8,7 +8,7 @@
 ```
 
 # saisoku - Fast file transfer orchestration pipeline
-Saisoku is a Python (2.7, 3.6 tested) package that helps you build complex pipelines of batch file copying jobs. It supports threaded transfering of files locally, over network mounts or HTTP.
+Saisoku is a Python (2.7, 3.6 tested) package that helps you build complex pipelines of batch file copying jobs. It supports threaded transferring of files locally, over network mounts or HTTP.
 
 Saisoku also includes a Transfer Server and Client which support copying over TCP sockets.
 
