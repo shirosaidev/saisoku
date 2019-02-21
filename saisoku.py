@@ -195,11 +195,11 @@ class ThreadedHTTPCopy:
     copyCount = 0
     lock = Lock()
 
-    def __init__(self, src, dst, threads=16, tservports=[8000,8001,8002,8003], fetchmode='urlretrieve', chunksize=8192):
+    def __init__(self, src, dst, threads=1, ports=[5005], fetchmode='urlretrieve', chunksize=8192):
         self.src = src
         self.dst = dst
         self.threads = threads
-        self.tservports = tservports
+        self.ports = ports
         self.fileList = []
         self.sizecounter = 0
         self.fetchmode = fetchmode  # requests, urlretrieve
@@ -270,7 +270,7 @@ class ThreadedHTTPCopy:
     def tserv_lb(self):
         """Load balance across tserve ports."""
         import random
-        port = random.choice(self.tservports)
+        port = random.choice(self.ports)
         url = self.src + ":" + str(port)
         return url
 
@@ -311,3 +311,32 @@ class ThreadedHTTPCopy:
         fileQueue.join()
         self.pbar.close()
         logger.info('Done')
+
+
+class color:
+    PURPLE = '\033[95m'
+    CYAN = '\033[96m'
+    DARKCYAN = '\033[36m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    END = '\033[0m'
+
+
+def output_banner():
+    import random
+    c = random.choice((color.PURPLE, color.CYAN, color.YELLOW, color.RED))
+    banner = '''%s
+
+       ___              _                      _             
+      / __|   __ _     (_)     ___     ___    | |__   _  _   
+      \\__ \\  / _` |    | |    (_-<    / _ \\   | / /  | +| |  
+      |___/  \\__,_|   _|_|_   /__/_   \___/   |_\\_\\   \\_,_|  
+    _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| 
+    "`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-' v%s
+
+    %s''' % (c, SAISOKU_VERSION, color.END)
+    print(banner)

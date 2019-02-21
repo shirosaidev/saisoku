@@ -3,6 +3,7 @@
 ## [0.1-b.3] = 2019-02-21
 ### added
 - copy package task (CopyFilesPackage class) for creating tar.gz of files in src directory and copying it to dst
+- saisoku transfer server and client
 ### changed
 - improved tserv.py
 ### fixed

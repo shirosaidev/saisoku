@@ -3,6 +3,9 @@
 """run_luigi.py
 Saisoku is a Python module that helps you build complex pipelines of batch file copying jobs.
 
+See README.md or https://github.com/shirosaidev/saisoku
+for more information.
+
 Author: shirosai <cpark16@gmail.com>
 
 Copyright (C) Chris Park 2019
@@ -54,16 +57,16 @@ class CopyFiles(luigi.Task):
 class CopyFilesHTTP(luigi.Task):
     src = luigi.Parameter()
     dst = luigi.Parameter()
-    threads = luigi.IntParameter(default=16)
-    tservports = luigi.ListParameter(default=[8000,8001,8002,8003])
+    threads = luigi.IntParameter(default=1)
+    ports = luigi.ListParameter(default=[5005])
     fetchmode = luigi.Parameter(default='urlretrieve')
-    chunksize = luigi.IntParameter(default=16384)
+    chunksize = luigi.IntParameter(default=8192)
 
     def run(self):
         from saisoku import ThreadedHTTPCopy
 
-        ThreadedHTTPCopy(src=self.src, dst=self.dst, threads=self.threads, tservports=self.tservports, 
-                    fetchmode=self.fetchmode, chunksize=self.chunksize)
+        ThreadedHTTPCopy(src=self.src, dst=self.dst, threads=self.threads, ports=self.ports, 
+                        fetchmode=self.fetchmode, chunksize=self.chunksize)
 
 
 class PackageDirectory(luigi.Task):

@@ -4,19 +4,14 @@ from __future__ import unicode_literals
 """tsver.py
 Saisoku is a Python module that helps you build complex pipelines of batch file copying jobs.
 
+See README.md or https://github.com/shirosaidev/saisoku
+for more information.
+
 Author: shirosai <cpark16@gmail.com>
 
 Copyright (C) Chris Park 2019
 saisoku is released under the Apache 2.0 license. See
 LICENSE for the full license text.
-"""
-
-"""
-Starts a Tornado static file server in a given directory.
-To start the server in the current directory:
-    tserv .
-Then go to http://localhost:8000 to browse the directory.
-Use the --port option to change the port on which the server listens.
 """
 
 import os
@@ -96,21 +91,7 @@ def stop_server(signum, frame):
     logging.info('Stopped!')
 
 
-def parse_args(args=None):
-    parser = ArgumentParser(
-        description=(
-            'Start a Tornado server to serve static files out of a '
-            'given directory.'))
-    parser.add_argument(
-        '-p', '--port', type=int, default=8000,
-        help='Port on which to run server.')
-    parser.add_argument(
-        'dir', help='Directory from which to serve files.')
-    return parser.parse_args(args)
-
-
-def main():
-    args = parse_args()
+def start_http_server(args):
     os.chdir(args.dir)
     logging.debug('cwd: %s' % args.dir)
     try:
@@ -126,7 +107,3 @@ def main():
         tornado.ioloop.IOLoop.instance().start()
     except KeyboardInterrupt:
         signal.signal(signal.SIGINT, stop_server)
-
-
-if __name__ == '__main__':
-    main()
