@@ -1,9 +1,11 @@
 # saisoku Change Log
 
-## [0.1-b.3] = 2019-02-21
+## [0.1-b.3] = 2019-02-22
 ### added
 - copy package task (CopyFilesPackage class) for creating tar.gz of files in src directory and copying it to dst
 - saisoku transfer server and client
+- luigi tasks for copying files to and from aws s3 buckets
+- requirement for boto3 (aws sdk python module)
 ### changed
 - improved tserv.py
 ### fixed

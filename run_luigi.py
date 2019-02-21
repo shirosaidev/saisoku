@@ -14,6 +14,8 @@ LICENSE for the full license text.
 """
 
 import luigi
+from luigi.contrib.s3 import S3Target, S3Client
+
 import logging
 
 
@@ -130,6 +132,70 @@ class CopyFilesPackage(luigi.Task):
                 os.remove(filename)  # delete tar.gz file in src
             logger.debug('  Removing %s...' % self.filelist)
             os.remove(self.filelist)  # delete file list
+
+
+class S3File(luigi.ExternalTask):
+    src = luigi.Parameter()
+
+    def output(self):
+        return S3Target(self.src)
+
+
+class CopyS3FileToLocal(luigi.Task):
+    src = luigi.Parameter()
+    dst = luigi.Parameter()
+
+    def output(self):
+        return luigi.LocalTarget(self.dst)
+
+    def requires(self):
+        return S3File(src=self.src)
+
+    def run(self):
+        """
+        examples:
+        * s3://bucket/foo/bar.txt
+        * s3://bucket/foo/bar.txt?aws_access_key_id=xxx&aws_secret_access_key=yyy
+        """
+        result = ''
+
+        with self.input().open('r') as f:
+            for line in f:
+                result += line
+
+        if result:
+            out_file = self.output().open('w')
+            out_file.write(result)
+            out_file.close()
+
+
+
+class LocalFile(luigi.ExternalTask):
+    src = luigi.Parameter()
+
+    def output(self):
+        return luigi.LocalTarget(self.src)
+
+
+class CopyLocalFileToS3(luigi.Task):
+    src = luigi.Parameter()
+    dst = luigi.Parameter()
+
+    def output(self):
+        return S3Target(self.dst)
+
+    def requires(self):
+        return LocalFile(src=self.src)
+
+    def run(self):
+        result = None
+
+        with self.input().open('r') as f:
+            result = f.readlines()
+
+        with self.output().open('w') as f:
+            for line in result:
+                f.write(line)
 
 
 if __name__ == '__main__':

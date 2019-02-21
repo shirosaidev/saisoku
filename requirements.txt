@@ -5,3 +5,4 @@ pyfastcopy==1.0.3
 tqdm==4.18.0
 requests==2.20.0
 beautifulsoup4==4.6.3
+boto3==1.9.99
