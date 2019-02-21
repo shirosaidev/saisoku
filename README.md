@@ -98,7 +98,7 @@ $ python saisoku_server.py --host 0.0.0.0 -p 5005
 ```
 Run client to download file from server
 ```sh
-$ python saisoku_client.py --host 0.0.0.0 -p 5005 /path/to/file
+$ python saisoku_client.py --host 192.168.2.3 -p 5005 /path/to/file
 ```
 
 **Log for saisoku is in os env temp folder saisoku.log.**
