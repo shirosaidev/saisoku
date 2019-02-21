@@ -100,12 +100,12 @@ $ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path --ho
 
 To copy a local file to s3 bucket
 ```sh
-$ python run_luigi.py CopyLocalFileToS3 --src /source/path --dst s3://bucket/foo/bar
+$ python run_luigi.py CopyLocalFileToS3 --src /source/file --dst s3://bucket/foo/bar
 ```
 
 s3 bucket object to local file
 ```sh
-$ python run_luigi.py CopyS3lFileToLocal --src s3://bucket/foo/bar --dst /dest/path
+$ python run_luigi.py CopyS3lFileToLocal --src s3://bucket/foo/bar --dst /dest/file
 ```
 
 ## Usage - Server -> Client transfer
