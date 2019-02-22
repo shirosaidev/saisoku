@@ -139,7 +139,10 @@ Run client to download file from server
 $ python saisoku_client.py --host 192.168.2.3 -p 5005 /path/to/file
 ```
 
-**Log for saisoku is in os env temp folder saisoku.log.**
+
+## Log directory
+
+Saisoku log gets written to os env TEMP/TMPDIR directory in `saisoku.log` file.
 
 
 ## Using saisoku module in Python
