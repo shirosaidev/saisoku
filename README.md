@@ -34,7 +34,7 @@ $ pip install -r requirements.txt
 ## Download
 
 ```shell
-$ git clone https://github.com/saisoku/saisoku.git
+$ git clone https://github.com/shirosaidev/saisoku.git
 $ cd saisoku
 ```
 [Download latest version](https://github.com/shirosaidev/saisoku/releases/latest)
