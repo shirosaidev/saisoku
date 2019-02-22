@@ -18,20 +18,7 @@ from luigi.contrib.s3 import S3Target, S3Client
 
 import logging
 
-
-def logging_setup():
-    """Set up logging."""
-    logger = logging.getLogger(name='run_luigi')
-    logger.setLevel(logging.DEBUG)
-    logformatter = logging.Formatter('%(asctime)s [%(levelname)s][%(name)s] %(message)s')
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
-    ch.setFormatter(logformatter)
-    logger.addHandler(ch)
-    logger.propagate = False
-    return logger
-
-logger = logging_setup()
+from saisoku import logger
 
 
 class CopyFiles(luigi.Task):
@@ -157,17 +144,16 @@ class CopyS3FileToLocal(luigi.Task):
         * s3://bucket/foo/bar.txt
         * s3://bucket/foo/bar.txt?aws_access_key_id=xxx&aws_secret_access_key=yyy
         """
-        result = ''
+        def copy():
+            with self.input().open('r') as infile:
+                for line in infile:
+                    yield line
 
-        with self.input().open('r') as f:
-            for line in f:
-                result += line
-
-        if result:
-            out_file = self.output().open('w')
-            out_file.write(result)
-            out_file.close()
-
+        logger.info('Copying %s to %s ...' % (self.src, self.dst))
+        with self.output().open('w') as outfile:
+            for line in copy():
+                outfile.write(line)
+        logger.info('Done')
 
 
 class LocalFile(luigi.ExternalTask):
@@ -188,14 +174,16 @@ class CopyLocalFileToS3(luigi.Task):
         return LocalFile(src=self.src)
 
     def run(self):
-        result = None
+        def copy():
+            with self.input().open('r') as infile:
+                for line in infile:
+                    yield line
 
-        with self.input().open('r') as f:
-            result = f.readlines()
-
-        with self.output().open('w') as f:
-            for line in result:
-                f.write(line)
+        logger.info('Copying %s to %s ...' % (self.src, self.dst))
+        with self.output().open('w') as outfile:
+            for line in copy():
+                outfile.write(line)
+        logger.info('Done')
 
 
 if __name__ == '__main__':
