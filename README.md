@@ -198,3 +198,27 @@ Optional parameters:
 
 >>> ThreadedHTTPCopy('http://localhost', '/dest/dir')
 ```
+
+### Rclone
+
+Saisoku's `Rclone` class requires two parameters:
+
+`src` source directory of files you want to sync
+
+`dst` destination directory of where you want the files to go
+
+Optional parameters:
+
+ def __init__(self, src, dst, flags=[], command='sync', cmdargs=[]):
+
+`flags` a list of Rclone flags (default [])
+
+`command` subcommand you want Rclone to use (default sync)
+
+`cmdargs` a list of command args to use (default ['--dry-run', '-vv'])
+
+```
+>>> from saisoku import Rclone
+
+>>> Rclone('/src/dir', '/dest/dir')
+```
