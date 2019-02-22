@@ -196,7 +196,7 @@ class CopyLocalFileToS3(luigi.Task):
         logger.info('Done. Copied %s KB in %s seconds (%s KB/s)' % (size, t, kb_per_sec))
 
 
-class SyncFilesRclone(luigi.Task):
+class SyncDirsRclone(luigi.Task):
     src = luigi.Parameter()
     dst = luigi.Parameter()
     flags = luigi.ListParameter(default=[])

@@ -108,6 +108,26 @@ s3 bucket object to local file
 $ python run_luigi.py CopyS3lFileToLocal --src s3://bucket/foo/bar --dst /dest/file
 ```
 
+### Rclone sync
+
+Saisoku can use Rclone to sync direcotries. First, make sure you have [Rclone](https://rclone.org/) installed and in your PATH.
+
+To to do a dry-run sync from source to dest using Rclone:
+```sh
+$ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path
+```
+
+To sync from source to dest using Rclone
+```sh
+$ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --cmdargs '[]'
+```
+
+To change the subcommand that Rclone uses (default is sync)
+```sh
+$ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --command 'subcommand'
+```
+
+
 ## Usage - Server -> Client transfer
 
 Start up Saisoku Transfer server listening on all interfaces on port 5005 (default)
