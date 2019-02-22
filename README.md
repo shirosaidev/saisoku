@@ -140,9 +140,9 @@ $ python saisoku_client.py --host 192.168.2.3 -p 5005 /path/to/file
 ```
 
 
-## Log directory
+## Log file
 
-Saisoku log gets written to os env TEMP/TMPDIR directory in `saisoku.log` file.
+Saisoku output get logged to os env TEMP/TMPDIR directory in `saisoku.log` file.
 
 
 ## Using saisoku module in Python
