@@ -1,6 +1,5 @@
-<img align="left" width="226" height="200" src="docs/saisoku.png?raw=true" hspace="5" vspace="5" alt="saisoku">
-
 # saisoku - Fast file transfer orchestration pipeline
+
 Saisoku is a Python (2.7, 3.6 tested) package that helps you build complex pipelines of batch file copying jobs. It supports threaded transferring of files locally, over network mounts, or HTTP. With Saisoku you can also transfer files to and from AWS S3 buckets and sync directories using Rclone.
 
 Saisoku also includes a Transfer Server and Client which support copying over TCP sockets.
@@ -11,6 +10,8 @@ Saisoku uses Luigi for task management and web ui. To learn more about Luigi, se
 [![Release](https://img.shields.io/github/release/shirosaidev/saisoku.svg?label=Release&maxAge=60)](https://github.com/shirosaidev/saisoku/releases/latest)
 [![Sponsor Patreon](https://img.shields.io/badge/Sponsor%20%24-Patreon-brightgreen.svg)](https://www.patreon.com/shirosaidev)
 [![Donate PayPal](https://img.shields.io/badge/Donate%20%24-PayPal-brightgreen.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLF223XAS4W72)
+
+<img align="left" width="226" height="200" src="docs/saisoku.png?raw=true" hspace="5" vspace="5" alt="saisoku">
 
 ## Patreon
 If you are a fan of the project or using Saisoku in production, please consider becoming a [Patron](https://www.patreon.com/shirosaidev) to help advance the project.
