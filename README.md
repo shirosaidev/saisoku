@@ -93,7 +93,7 @@ This will create an index.html file on http://localhost:5005 serving up the file
 
 To send a HTTP copy files task to Luigi
 ```sh
-$ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path --hosts '[5005,5006]'
+$ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path --hosts [5005,5006]
 ```
 
 ### S3 copy
@@ -119,7 +119,7 @@ $ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path
 
 To sync from source to dest using Rclone
 ```sh
-$ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --cmdargs '[]'
+$ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --cmdargs ['-vv']
 ```
 
 To change the subcommand that Rclone uses (default is sync)
