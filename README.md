@@ -110,7 +110,7 @@ $ python run_luigi.py CopyS3lFileToLocal --src s3://bucket/foo/bar --dst /dest/f
 
 ### Rclone sync
 
-Saisoku can use Rclone to sync direcotries. First, make sure you have [Rclone](https://rclone.org/) installed and in your PATH.
+Saisoku can use Rclone to sync directories, etc. First, make sure you have [Rclone](https://rclone.org/) installed and in your PATH.
 
 To to do a dry-run sync from source to dest using Rclone:
 ```sh
