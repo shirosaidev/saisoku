@@ -3,6 +3,9 @@
 """saisoku.py
 Saisoku is a Python module that helps you build complex pipelines of batch file copying jobs.
 
+See README.md or https://github.com/shirosaidev/saisoku
+for more information.
+
 Author: shirosai <cpark16@gmail.com>
 
 Copyright (C) Chris Park 2019
@@ -28,7 +31,7 @@ import logging
 import tempfile
 
 
-SAISOKU_VERSION = '0.1-b.4'
+SAISOKU_VERSION = '0.1-b.3'
 __version__ = SAISOKU_VERSION
 
 
@@ -378,8 +381,3 @@ class Rclone:
             raise Error(self.errors)
 
         logger.info('Done')
-
-"""
->>> from saisoku import Rclone
->>> Rclone('./', './temp', command='sync', cmdargs=['--dry-run', '-vv'])
-"""
