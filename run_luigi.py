@@ -16,6 +16,8 @@ LICENSE for the full license text.
 import luigi
 from luigi.contrib.s3 import S3Target, S3Client
 
+import os
+import time
 import logging
 
 from saisoku import logger
@@ -150,10 +152,14 @@ class CopyS3FileToLocal(luigi.Task):
                     yield line
 
         logger.info('Copying %s to %s ...' % (self.src, self.dst))
+        t = time.time()
         with self.output().open('w') as outfile:
             for line in copy():
                 outfile.write(line)
-        logger.info('Done')
+        t = round(time.time() - t, 2)
+        size = os.path.getsize(self.src) / 1024  # in KB
+        kb_per_sec = round(size / t, 2)
+        logger.info('Done. Copied in %s seconds (%s KB/s)' % (t, kb_per_sec))
 
 
 class LocalFile(luigi.ExternalTask):
@@ -180,10 +186,14 @@ class CopyLocalFileToS3(luigi.Task):
                     yield line
 
         logger.info('Copying %s to %s ...' % (self.src, self.dst))
+        t = time.time()
         with self.output().open('w') as outfile:
             for line in copy():
                 outfile.write(line)
-        logger.info('Done')
+        t = round(time.time() - t, 2)
+        size = os.path.getsize(self.src) / 1024  # in KB
+        kb_per_sec = round(size / t, 2)
+        logger.info('Done. Copied in %s seconds (%s KB/s)' % (t, kb_per_sec))
 
 
 if __name__ == '__main__':
