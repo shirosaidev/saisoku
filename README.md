@@ -13,7 +13,6 @@ Saisoku uses Luigi for task management and web ui. To learn more about Luigi, se
 [![Sponsor Patreon](https://img.shields.io/badge/Sponsor%20%24-Patreon-brightgreen.svg)](https://www.patreon.com/shirosaidev)
 [![Donate PayPal](https://img.shields.io/badge/Donate%20%24-PayPal-brightgreen.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CLF223XAS4W72)
 
-
 ## Patreon
 If you are a fan of the project or using Saisoku in production, please consider becoming a [Patron](https://www.patreon.com/shirosaidev) to help advance the project.
 
@@ -41,6 +40,7 @@ $ git clone https://github.com/saisoku/saisoku.git
 $ cd saisoku
 ```
 [Download latest version](https://github.com/shirosaidev/saisoku/releases/latest)
+
 
 ## Run Luigi
 
