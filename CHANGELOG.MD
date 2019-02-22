@@ -6,6 +6,8 @@
 - saisoku transfer server and client
 - luigi tasks for copying files to and from aws s3 buckets
 - requirement for boto3 (aws sdk python module)
+- rclone Luigi task, requires rclone installed and in PATH
+- Rclone class to saisoku module
 ### changed
 - improved tserv.py
 ### fixed

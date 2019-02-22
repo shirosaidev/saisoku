@@ -157,9 +157,9 @@ class CopyS3FileToLocal(luigi.Task):
             for line in copy():
                 outfile.write(line)
         t = round(time.time() - t, 2)
-        size = os.path.getsize(self.dst) / 1024  # in KB
+        size = round(os.path.getsize(self.dst) / 1024 * 1.0, 2)  # in KB
         kb_per_sec = round(size / t, 2)
-        logger.info('Done. Copied in %s seconds (%s KB/s)' % (t, kb_per_sec))
+        logger.info('Done. Copied %s KB in %s seconds (%s KB/s)' % (size, t, kb_per_sec))
 
 
 class LocalFile(luigi.ExternalTask):
@@ -191,9 +191,22 @@ class CopyLocalFileToS3(luigi.Task):
             for line in copy():
                 outfile.write(line)
         t = round(time.time() - t, 2)
-        size = os.path.getsize(self.src) / 1024  # in KB
+        size = round(os.path.getsize(self.src) / 1024 * 1.0, 2)  # in KB
         kb_per_sec = round(size / t, 2)
-        logger.info('Done. Copied in %s seconds (%s KB/s)' % (t, kb_per_sec))
+        logger.info('Done. Copied %s KB in %s seconds (%s KB/s)' % (size, t, kb_per_sec))
+
+
+class SyncFilesRclone(luigi.Task):
+    src = luigi.Parameter()
+    dst = luigi.Parameter()
+    flags = luigi.ListParameter(default=[])
+    command = luigi.Parameter(default='sync')
+    cmdargs = luigi.ListParameter(default=['--dry-run', '-vv'])
+
+    def run(self):
+        from saisoku import Rclone
+        
+        Rclone(src=self.src, dst=self.dst, flags=self.flags, command=self.command, cmdargs=self.cmdargs)
 
 
 if __name__ == '__main__':

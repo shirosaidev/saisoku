@@ -28,7 +28,7 @@ import logging
 import tempfile
 
 
-SAISOKU_VERSION = '0.1-b.3'
+SAISOKU_VERSION = '0.1-b.4'
 __version__ = SAISOKU_VERSION
 
 
@@ -58,7 +58,47 @@ def logging_setup():
         logger.addHandler(hdlr)
     return logger
 
+
 logger = logging_setup()
+
+
+class color:
+    PURPLE = '\033[95m'
+    CYAN = '\033[96m'
+    DARKCYAN = '\033[36m'
+    BLUE = '\033[94m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    RED = '\033[91m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    END = '\033[0m'
+
+
+def output_banner():
+    import random
+    c = random.choice((color.PURPLE, color.CYAN, color.YELLOW, color.RED))
+    banner = '''%s
+
+       ___              _                      _             
+      / __|   __ _     (_)     ___     ___    | |__   _  _   
+      \\__ \\  / _` |    | |    (_-<    / _ \\   | / /  | +| |  
+      |___/  \\__,_|   _|_|_   /__/_   \___/   |_\\_\\   \\_,_|  
+    _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| 
+    "`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-' v%s
+
+    %s''' % (c, SAISOKU_VERSION, color.END)
+    print(banner)
+
+
+def get_num_lines(fileNameList):
+    """Get number of lines in txt file."""
+    fp = open(fileNameList, "r+")
+    buf = mmap.mmap(fp.fileno(), 0)
+    lines = 0
+    while buf.readline():
+        lines += 1
+    return lines
 
 
 class ThreadedCopy:
@@ -87,7 +127,7 @@ class ThreadedCopy:
         logger.info("Calculating total file size..")
         if filelist:
             with open(self.filelist, "r") as file:  # txt with a file per line
-                for line in tqdm(file, total=self.get_num_lines(self.filelist), unit='files'):
+                for line in tqdm(file, total=get_num_lines(self.filelist), unit='files'):
                     fname = line.rstrip('\n')
                     if not self.is_package_task:  # copy files package task
                         fpath = os.path.join(self.src, fname)
@@ -178,15 +218,6 @@ class ThreadedCopy:
         fileQueue.join()
         self.pbar.close()
         logger.info('Done')
-
-    def get_num_lines(self, fileNameList):
-        """Get number of lines in txt file."""
-        fp = open(fileNameList, "r+")
-        buf = mmap.mmap(fp.fileno(), 0)
-        lines = 0
-        while buf.readline():
-            lines += 1
-        return lines
 
 
 class ThreadedHTTPCopy:
@@ -313,30 +344,42 @@ class ThreadedHTTPCopy:
         logger.info('Done')
 
 
-class color:
-    PURPLE = '\033[95m'
-    CYAN = '\033[96m'
-    DARKCYAN = '\033[36m'
-    BLUE = '\033[94m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    RED = '\033[91m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    END = '\033[0m'
+class Rclone:
+    """Rclone class. Uses subprocess to run rclone."""
 
+    def __init__(self, src, dst, flags=[], command='sync', cmdargs=[]):
+        self.src = src
+        self.dst = dst
+        self.flags = flags
+        self.command = command
+        self.cmdargs = cmdargs
+        self.errors = []
 
-def output_banner():
-    import random
-    c = random.choice((color.PURPLE, color.CYAN, color.YELLOW, color.RED))
-    banner = '''%s
+        self.run_rclone()
 
-       ___              _                      _             
-      / __|   __ _     (_)     ___     ___    | |__   _  _   
-      \\__ \\  / _` |    | |    (_-<    / _ \\   | / /  | +| |  
-      |___/  \\__,_|   _|_|_   /__/_   \___/   |_\\_\\   \\_,_|  
-    _|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""|_|"""""| 
-    "`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-'"`-0-0-' v%s
+    def run_rclone(self):
+        from subprocess import check_output, CalledProcessError, STDOUT
 
-    %s''' % (c, SAISOKU_VERSION, color.END)
-    print(banner)
+        cmd = ['rclone']
+        [cmd.append(f) for f in self.flags]
+        cmd.append(self.command)
+        cmd.append(self.src)
+        cmd.append(self.dst)
+        [cmd.append(a) for a in self.cmdargs]
+        logger.debug('rclone command: {}'.format(" ".join(cmd)))
+        
+        logger.info('Starting rclone from %s to %s..' % (self.src, self.dst))
+        try:
+            output = check_output(cmd, stderr=STDOUT)
+            logger.debug(output)
+        except CalledProcessError as e:
+            self.errors.append((self.src, self.dst, str(e.output), str(e.returncode)))
+        if self.errors:
+            raise Error(self.errors)
+
+        logger.info('Done')
+
+"""
+>>> from saisoku import Rclone
+>>> Rclone('./', './temp', command='sync', cmdargs=['--dry-run', '-vv'])
+"""
