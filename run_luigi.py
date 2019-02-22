@@ -157,7 +157,7 @@ class CopyS3FileToLocal(luigi.Task):
             for line in copy():
                 outfile.write(line)
         t = round(time.time() - t, 2)
-        size = os.path.getsize(self.src) / 1024  # in KB
+        size = os.path.getsize(self.dst) / 1024  # in KB
         kb_per_sec = round(size / t, 2)
         logger.info('Done. Copied in %s seconds (%s KB/s)' % (t, kb_per_sec))
 
