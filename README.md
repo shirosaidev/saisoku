@@ -71,7 +71,7 @@ With the Luigi centralized scheduler running, we can send a copy files task to L
 $ python run_luigi.py CopyFiles --src /source/path --dst /dest/path
 ```
 
-See [parameters](#using-saisoku-module-in-python).
+See below for the different [parameters](#using-saisoku-module-in-python) for each Luigi task.
 
 ### Tarball package copy
 To run a copy package task, which will create a tar.gz (gzipped tarball) file containing all files at src and copy the tar.gz to dst
