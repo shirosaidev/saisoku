@@ -66,10 +66,12 @@ If you are going to use the S3 copy Luigi tasks, first start be setting up Boto 
 
 ### Local/network mount copy
 
-With the Luigi centralized scheduler running, we can send a copy files task to Luigi (see below for [parameters](#using-saisoku-module-in-python))
+With the Luigi centralized scheduler running, we can send a copy files task to Luigi 
 ```sh
 $ python run_luigi.py CopyFiles --src /source/path --dst /dest/path
 ```
+
+See [parameters](#using-saisoku-module-in-python).
 
 ### Tarball package copy
 To run a copy package task, which will create a tar.gz (gzipped tarball) file containing all files at src and copy the tar.gz to dst
@@ -102,7 +104,6 @@ s3 bucket object to local file
 ```sh
 $ python run_luigi.py CopyS3lFileToLocal --src s3://bucket/foo/bar --dst /dest/file
 ```
-See below for [parameters](#s3)
 
 ### Rclone sync
 
@@ -122,7 +123,6 @@ To change the subcommand that Rclone uses (default is sync)
 ```sh
 $ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --command 'subcommand'
 ```
-See below for [parameters](#rclone)
 
 
 ## Usage - Server -> Client transfer
