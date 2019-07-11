@@ -116,7 +116,7 @@ $ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path
 
 To sync from source to dest using Rclone
 ```sh
-$ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --cmdargs ['-vv']
+$ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --cmdargs '["-vv"]'
 ```
 
 To change the subcommand that Rclone uses (default is sync)
