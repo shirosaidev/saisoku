@@ -185,13 +185,13 @@ Saisoku's `ThreadedHTTPCopy` class requires two parameters:
 
 Optional parameters:
 
-`threads` number of worker copy threads (default 16)
+`threads` number of worker copy threads (default 1)
 
-`tservports` tornado server (tserv) ports, these ports will be load balanced (default (8000,8001,8002,8003))
+`ports` tornado server (tserv) ports, these ports will be load balanced (default [5000])
 
 `fetchmode` file get mode, either requests or urlretrieve (default urlretrieve)
 
-`chunksize` chunk size for requests fetchmode (default 16384)
+`chunksize` chunk size for requests fetchmode (default 8192)
 
 ```
 >>> from saisoku import ThreadedHTTPCopy
