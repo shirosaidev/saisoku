@@ -90,7 +90,7 @@ This will create an index.html file on http://localhost:5005 serving up the file
 
 To send a HTTP copy files task to Luigi
 ```sh
-$ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path --hosts [5005,5006]
+$ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path --ports [5005,5006] --threads 2
 ```
 
 ### S3 copy
