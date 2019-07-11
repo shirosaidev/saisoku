@@ -31,7 +31,7 @@ import logging
 import tempfile
 
 
-SAISOKU_VERSION = '0.1-b.3'
+SAISOKU_VERSION = '0.1-b.4'
 __version__ = SAISOKU_VERSION
 
 
@@ -319,7 +319,6 @@ class ThreadedHTTPCopy:
         while True:
             fileItem = fileQueue.get()
             fileName, size = fileItem
-            fileName = fileName.encode('utf-8')
             url = self.tserv_lb()
             srcname = urljoin(url, fileName)
             dstname = os.path.join(self.dst, fileName)
@@ -328,8 +327,6 @@ class ThreadedHTTPCopy:
                 raise Error(self.errors)
             with self.lock:
                 self.copyCount += 1
-                #percent = (self.copyCount * 100) / self.totalFiles
-                #print(str(percent) + " percent copied.")
                 self.pbar.set_postfix(file=fileName[-10:], refresh=False)
                 self.pbar.update(size)
             fileQueue.task_done()
