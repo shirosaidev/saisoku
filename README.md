@@ -90,7 +90,7 @@ This will create an index.html file on http://localhost:5005 serving up the file
 
 To send a HTTP copy files task to Luigi
 ```sh
-$ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path --hosts [5005,5006]
+$ python run_luigi.py CopyFilesHTTP --src http://localhost --dst /dest/path --ports [5005,5006] --threads 2
 ```
 
 ### S3 copy
@@ -116,7 +116,7 @@ $ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path
 
 To sync from source to dest using Rclone
 ```sh
-$ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --cmdargs ['-vv']
+$ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --cmdargs '["-vv"]'
 ```
 
 To change the subcommand that Rclone uses (default is sync)
@@ -185,13 +185,13 @@ Saisoku's `ThreadedHTTPCopy` class requires two parameters:
 
 Optional parameters:
 
-`threads` number of worker copy threads (default 16)
+`threads` number of worker copy threads (default 1)
 
-`tservports` tornado server (tserv) ports, these ports will be load balanced (default (8000,8001,8002,8003))
+`ports` tornado server (tserv) ports, these ports will be load balanced (default [5000])
 
 `fetchmode` file get mode, either requests or urlretrieve (default urlretrieve)
 
-`chunksize` chunk size for requests fetchmode (default 16384)
+`chunksize` chunk size for requests fetchmode (default 8192)
 
 ```
 >>> from saisoku import ThreadedHTTPCopy
