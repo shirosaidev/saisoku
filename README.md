@@ -231,7 +231,7 @@ Optional parameters:
 >>> Rclone('/src/dir', '/dest/dir')
 ```
 
-### watchdog
+### Watchdog
 
 Saisoku's `Watchdog` class requires two parameters:
 
@@ -255,9 +255,9 @@ Optional parameters:
 
 
 ```
->>> from saisoku import Rclone
+>>> from saisoku import Watchdog
 
->>> Rclone('/src/dir', '/dest/dir')
+>>> Watchdog('/src/dir', '/dest/dir')
 ```
 
 ## Patreon
