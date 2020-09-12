@@ -8,7 +8,7 @@ for more information.
 
 Author: shirosai <cpark16@gmail.com>
 
-Copyright (C) Chris Park 2019
+Copyright (C) Chris Park 2019-2020
 saisoku is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """

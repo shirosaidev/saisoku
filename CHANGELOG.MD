@@ -1,5 +1,10 @@
 # saisoku Change Log
 
+## [0.1-b.5] = 2020-09-11
+### added
+- watchdog task (SyncDirsWatchdog class) for keeping two directories (optionally recursive) in sync in "real-time" (requires rsync in PATH)
+- requirement for watchdog py module
+
 ## [0.1-b.4] = 2019-07-11
 ### fixed
 - TypeError issue with CopyFilesHTTP and python3

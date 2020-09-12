@@ -1,8 +1,8 @@
-luigi==2.8.3
-tornado==4.5.3
-scandir==1.9.0
-pyfastcopy==1.0.3
-tqdm==4.18.0
-requests==2.20.0
-beautifulsoup4==4.6.3
-boto3==1.9.99
+luigi
+tornado
+scandir
+tqdm
+requests
+beautifulsoup4
+boto3
+watchdog

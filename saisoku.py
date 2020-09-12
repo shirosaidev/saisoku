@@ -15,23 +15,25 @@ LICENSE for the full license text.
 
 import errno
 import os
+import sys
 import time
 import mmap
+import shutil
+import logging
+import tempfile
 try:
     from queue import Queue
 except ImportError:
     from Queue import Queue
 from threading import Thread, Lock
-import shutil
-from shutil import Error
-import pyfastcopy
+from shutil import copyfile, move, rmtree, Error
 from scandir import scandir
 from tqdm import tqdm
-import logging
-import tempfile
+from watchdog.observers import Observer
+from watchdog.events import PatternMatchingEventHandler
 
 
-SAISOKU_VERSION = '0.1-b.4'
+SAISOKU_VERSION = '0.1-b.5'
 __version__ = SAISOKU_VERSION
 
 
@@ -378,3 +380,83 @@ class Rclone:
             raise Error(self.errors)
 
         logger.info('Done')
+
+
+class WatchDog:
+    """WatchDog class. Uses watchdog python module."""
+
+    def __init__(self, src, dst, recursive, patterns, ignore_patterns, ignore_directories, case_sensitive):
+        self.src = src
+        self.dst = dst
+        self.recursive = recursive
+        self.patterns = patterns
+        self.ignore_patterns = ignore_patterns
+        self.ignore_directories = ignore_directories
+        self.case_sensitive = case_sensitive
+        self.errors = []
+
+        self.sync_dir()
+
+    def sync_dir(self):
+        logger.info(f'Doing initial sync from {self.src} to {self.dst}...')
+        os.system('rsync -av "{0}" "{1}"'.format(self.src+'/', self.dst+'/'))
+        logger.info(f'Starting watchdog sync from {self.src} to {self.dst}')
+        event_handler = PatternMatchingEventHandler(
+            self.patterns, self.ignore_patterns, self.ignore_directories, self.case_sensitive)
+        event_handler.on_created = self.on_created
+        event_handler.on_deleted = self.on_deleted
+        event_handler.on_modified = self.on_modified
+        event_handler.on_moved = self.on_moved
+        observer = Observer()
+        observer.schedule(event_handler, self.src, recursive=self.recursive)
+        observer.start()
+        try:
+            while True:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            observer.stop()
+        observer.join()
+        logger.info('Watchdog sync stopped')
+
+    def on_created(self, event):
+        logger.info(f"{event.src_path} has been created")
+        if not event.is_directory:
+            try:
+                file_size = -1
+                while file_size != os.path.getsize(event.src_path):
+                    file_size = os.path.getsize(event.src_path)
+                    time.sleep(1)
+                copyfile(event.src_path, os.path.join(self.dst, event.src_path.replace(self.src, self.dst)))
+            except FileExistsError:
+                pass
+
+    def on_deleted(self, event):
+        logger.info(f"{event.src_path} has been deleted")
+        try:
+            logger.info(f"deleting {os.path.join(self.dst, event.src_path.replace(self.src, self.dst))}")
+            if not event.is_directory:
+                os.remove(os.path.join(self.dst, event.src_path.replace(self.src, self.dst)))
+            else:
+                rmtree(os.path.join(self.dst, event.src_path.replace(self.src, self.dst)), ignore_errors=True)
+        except FileNotFoundError:
+            pass
+
+    def on_modified(self, event):
+        logger.info(f"{event.src_path} has been modified")
+        if not event.is_directory:
+            os.system(f'rsync -uv "{event.src_path}" "{os.path.join(self.dst, event.src_path.replace(self.src, self.dst))}"')
+        else:
+            os.system(f'rsync -av "{event.src_path}/" "{os.path.join(self.dst, event.src_path.replace(self.src, self.dst))}"')
+
+    def on_moved(self, event):
+        logger.info(f"{event.src_path} moved to {event.dest_path}")
+        if event.is_directory:
+            for dirpath, subdirs, files in os.walk(self.dst):
+                if dirpath == event.src_path.replace(self.src, self.dst):
+                    move(dirpath, event.dest_path.replace(self.src, self.dst))
+        else:
+            for dirpath, subdirs, files in os.walk(self.dst):
+                for file in files:
+                    filepath = os.path.join(dirpath, file)
+                    if filepath == event.src_path.replace(self.src, self.dst):
+                        move(filepath, event.dest_path.replace(self.src, self.dst))

@@ -8,7 +8,7 @@ for more information.
 
 Author: shirosai <cpark16@gmail.com>
 
-Copyright (C) Chris Park 2019
+Copyright (C) Chris Park 2019-2020
 saisoku is released under the Apache 2.0 license. See
 LICENSE for the full license text.
 """
@@ -208,6 +208,24 @@ class SyncDirsRclone(luigi.Task):
         
         Rclone(src=self.src, dst=self.dst, flags=self.flags, command=self.command, cmdargs=self.cmdargs)
 
+
+class SyncDirsWatchdog(luigi.Task):
+    src = luigi.Parameter()
+    dst = luigi.Parameter()
+    recursive = luigi.BoolParameter(default=True)
+    patterns = luigi.Parameter(default="*")
+    ignore_patterns = luigi.Parameter(default="")
+    ignore_directories = luigi.BoolParameter(default=False)
+    case_sensitive = luigi.BoolParameter(default=True)
+
+    def run(self):
+        from saisoku import WatchDog
+        
+        WatchDog(
+            src=self.src, dst=self.dst, recursive=self.recursive, patterns=self.patterns,
+            ignore_patterns=self.ignore_patterns, ignore_directories=self.ignore_directories, 
+            case_sensitive=self.case_sensitive)
+    
 
 if __name__ == '__main__':
     luigi.run()
