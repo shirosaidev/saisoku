@@ -2,7 +2,7 @@
 
 <img align="left" width="226" height="200" src="docs/saisoku.png?raw=true" hspace="5" vspace="5" alt="saisoku">
 
-Saisoku is a Python (2.7, 3.6 tested) package that helps you build complex pipelines of batch file/directory transfer/sync jobs. It supports threaded transferring of files locally, over network mounts, or HTTP. With Saisoku you can also transfer files to and from AWS S3 buckets and sync directories using Rclone.
+Saisoku is a Python (2.7, 3.6 tested) package that helps you build complex pipelines of batch file/directory transfer/sync jobs. It supports threaded transferring of files locally, over network mounts, or HTTP. With Saisoku you can also transfer files to and from AWS S3 buckets and sync directories using Rclone and keep directories in sync "real-time" with Watchdog.
 
 Saisoku includes a Transfer Server and Client which support copying over TCP sockets.
 
@@ -124,6 +124,14 @@ To change the subcommand that Rclone uses (default is sync)
 $ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --command 'subcommand'
 ```
 
+### Watchdog directory sync
+
+Saisoku can use watchdog to keep directories synced in "real-time". First, make sure you have rsync installed and in your PATH.
+
+To keep directories in sync from source to dest using Watchdog
+```sh
+$ python run_luigi.py SyncDirsWatchdog --src /source/path --dst /dest/path
+```
 
 ## Usage - Server -> Client transfer
 
@@ -221,6 +229,35 @@ Optional parameters:
 >>> from saisoku import Rclone
 
 >>> Rclone('/src/dir', '/dest/dir')
+```
+
+### Watchdog
+
+Saisoku's `Watchdog` class requires two parameters:
+
+`src` source directory of files you want to sync
+
+`dst` destination directory of where you want the files to go
+
+Optional parameters:
+
+ def __init__(self, src, dst, recursive, patterns, ignore_patterns, ignore_directories, case_sensitive)
+
+`recursive` bool used for recurisvely checking all sub directories for changes (default True)
+
+`patterns` file name patterns to use when checking for changes (default *)
+
+`ignore_patterns` file name patterns to ingore when checking for changes (default *)
+
+`ignore_directories` bool used for ignoring directories (default False)
+
+`case_sensitive` bool used for being case sensitive (default True)
+
+
+```
+>>> from saisoku import Watchdog
+
+>>> Watchdog('/src/dir', '/dest/dir')
 ```
 
 ## Patreon
