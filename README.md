@@ -124,6 +124,14 @@ To change the subcommand that Rclone uses (default is sync)
 $ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --command 'subcommand'
 ```
 
+### watchdog directory sync
+
+Saisoku can use watchdog to keep directories synced in "real-time". First, make sure you have rsync installed and in your PATH.
+
+To sync from source to dest using Rclone
+```sh
+$ python run_luigi.py SyncDirsWatchdog --src /source/path --dst /dest/path
+```
 
 ## Usage - Server -> Client transfer
 
@@ -216,6 +224,35 @@ Optional parameters:
 `command` subcommand you want Rclone to use (default sync)
 
 `cmdargs` a list of command args to use (default ['--dry-run', '-vv'])
+
+```
+>>> from saisoku import Rclone
+
+>>> Rclone('/src/dir', '/dest/dir')
+```
+
+### watchdog
+
+Saisoku's `Watchdog` class requires two parameters:
+
+`src` source directory of files you want to sync
+
+`dst` destination directory of where you want the files to go
+
+Optional parameters:
+
+ def __init__(self, src, dst, recursive, patterns, ignore_patterns, ignore_directories, case_sensitive)
+
+`recursive` bool used for recurisvely checking all sub directories for changes (default True)
+
+`patterns` file name patterns to use when checking for changes (default *)
+
+`ignore_patterns` file name patterns to ingore when checking for changes (default *)
+
+`ignore_directories` bool used for ignoring directories (default False)
+
+`case_sensitive` bool used for being case sensitive (default True)
+
 
 ```
 >>> from saisoku import Rclone
