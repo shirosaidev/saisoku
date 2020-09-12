@@ -124,11 +124,11 @@ To change the subcommand that Rclone uses (default is sync)
 $ python run_luigi.py SyncDirsRclone --src /source/path --dst /dest/path --command 'subcommand'
 ```
 
-### watchdog directory sync
+### Watchdog directory sync
 
 Saisoku can use watchdog to keep directories synced in "real-time". First, make sure you have rsync installed and in your PATH.
 
-To sync from source to dest using Rclone
+To keep directories in sync from source to dest using Watchdog
 ```sh
 $ python run_luigi.py SyncDirsWatchdog --src /source/path --dst /dest/path
 ```
