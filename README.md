@@ -2,7 +2,7 @@
 
 <img align="left" width="226" height="200" src="docs/saisoku.png?raw=true" hspace="5" vspace="5" alt="saisoku">
 
-Saisoku is a Python (2.7, 3.6 tested) package that helps you build complex pipelines of batch file/directory transfer/sync jobs. It supports threaded transferring of files locally, over network mounts, or HTTP. With Saisoku you can also transfer files to and from AWS S3 buckets and sync directories using Rclone.
+Saisoku is a Python (2.7, 3.6 tested) package that helps you build complex pipelines of batch file/directory transfer/sync jobs. It supports threaded transferring of files locally, over network mounts, or HTTP. With Saisoku you can also transfer files to and from AWS S3 buckets and sync directories using Rclone and keep directories in sync "real-time" with Watchdog.
 
 Saisoku includes a Transfer Server and Client which support copying over TCP sockets.
 
