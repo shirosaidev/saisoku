@@ -24,6 +24,7 @@ Saisoku uses Luigi for task management and web ui. To learn more about Luigi, se
 - requests
 - beautifulsoup4
 - boto3
+- watchdog
 
 Install above python modules using pip
 
